@@ -1,0 +1,78 @@
+import mysql.connector 
+
+server_host = "localhost"
+server_database = "login_portal"
+server_username = "root"
+server_password = "mySql123#"
+
+try:
+    connection = mysql.connector.connect(host = f"{server_host}", 
+                                        database = f"{server_database}",
+                                        user = f"{server_username}",
+                                        password = f"{server_password}")
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM username_password")
+    result = cursor.fetchall()
+
+    i = 0
+    for row in result:
+        print("Username: " + row[0])
+        print("Password: " + row[1])
+        i =+ 1
+
+    usernameList = []
+    passwordList = []
+    counter = 0
+    for row in result:
+        usernameList.append(row[0])
+        passwordList.append(row[1])
+        counter =+ 1
+
+
+    global logUserList
+    global logPassList
+    boolUsername = False
+    while not boolUsername:
+        logUsername = input("Enter Username: ")
+
+        boolUserChecker = False
+        for i in range(0, len(usernameList)):
+            if logUsername == usernameList[i]:
+                logUserList = usernameList[i]
+                logPassList = passwordList[i]
+                boolUserChecker = True
+            else:
+                i =+ 1
+        if boolUserChecker is True:
+            print("VALID USERNAME")
+            boolUsername = True
+        else:
+            print("INVALID USERNAME")
+
+    print("HELLO " + logUserList)
+
+    boolPassword = False
+    while not boolPassword:
+        logPassword = input("Enter Password: ")
+        
+        boolPassChecker = False
+        for i in range(0, len(passwordList)):
+            if logPassword == logPassList:
+                boolPassChecker = True
+            else:
+                i =+ 1
+
+        if boolPassChecker: 
+            print("Welcome to your Account!")
+            boolPassword = True
+        else:
+            print("INVALID PASSWORD")
+
+    print("Hello, Password")          
+
+
+except mysql.connector.Error as error:
+    print("Connection error: ".format(error))
+
+
